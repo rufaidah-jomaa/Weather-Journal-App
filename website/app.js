@@ -6,11 +6,11 @@ const apiKey = '13978db1571a03be700790f9f3af055d';
 /* Function to GET Web API Data*/
 const getWeatherData = async (newZip) => {
    const url = `${baseURL}?zip=${newZip}&appid=${apiKey}`
-  // res equals to the result of fetch function
+  // Fetch weather data from API
   const response = await fetch(url);
   try {
-     return  await response.json();
-  } catch (error) {
+     return  await response.json();// Convert response to JSON  // Return the JSON data
+  } catch (error) { // Handle errors
     console.log("Error fetching weather data:", error);
   }
 }
@@ -18,12 +18,12 @@ const getWeatherData = async (newZip) => {
 /* Function to POST data */
 const postData = async (url = '', data = {}) => {
   const request = await fetch(url, {
-    method: "POST",
-    credentials: "same-origin",
+    method: "POST", // POST method
+    credentials: "same-origin",// Ensure credentials are sent with the request
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json" // Specify content type as JSON
     },
-    body: JSON.stringify({
+    body: JSON.stringify({// Convert data object to JSON string
       date: data.date,
       temp: data.temp,
       content: data.content
@@ -32,27 +32,24 @@ const postData = async (url = '', data = {}) => {
 
   try {
     const responseData = await request.json(); 
-    return responseData;
+    return responseData; // Return the JSON response from the server
   
   }
-  catch (error) {
+  catch (error) {// Handle errors
     console.log("Error posting data:",error);
   }
 };
 
 const updateUI = async () => {
-  const request = await fetch('http://localhost:3000/all');
+  const request = await fetch('http://localhost:3000/all');// Get data from local server
   try {
-     // Transform into JSON
-    const allData = await request.json();
-    console.log(allData);
-    // show icons on the page
-    // Write updated data to DOM elements
+    const allData = await request.json();// Convert response to JSON
+ // Update the DOM with the new data
     document.getElementById('tempreture').innerHTML = Math.round(allData.temp)+ ' degrees';
     document.getElementById('content').innerHTML = allData.content;
     document.getElementById("date").innerHTML =allData.date;
   }
-  catch (error) {
+  catch (error) {//Handle errors
     console.log("error", error);
   }
 };
@@ -60,7 +57,7 @@ const updateUI = async () => {
 //Get the date
 let today = new Date();
 
-//select form by class name
+//select form element
 const form = document.querySelector('form');
 
 //event listener to an existing HTML button from DOM using Vanilla JS.
@@ -74,13 +71,12 @@ function performFunction(event) {
   const content = document.getElementById('feelings').value;
   const newZip = document.getElementById('zip').value; 
 try{
-  getWeatherData(newZip)
+  getWeatherData(newZip) //get data from OpenWeatherMap API
     .then(function (apiData) {
       // add data to POST request
-
     postData('http://localhost:3000/add', //url
-     { 
-      date: today.toLocaleDateString('en-GB'), //js Object
+     { //js Object
+      date: today.toLocaleDateString('en-GB'), 
        temp: apiData.main.temp, 
        content: content 
       })
